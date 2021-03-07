@@ -1,0 +1,87 @@
+---
+title: "Task 3"
+author: "Peyton Moore"
+date: "3/7/2021"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+
+library(tidyverse)
+library(here)
+library(boot)
+library(gt)
+library(patchwork)
+library(broom)
+library(nlstools)
+
+```
+
+
+**Data:**The following data are from the 2014 UCSB Campus Climate Project Final Report (prepared by Rankin & Associates Consulting, available at http://campusclimate.ucop.edu/_common/files/pdf-climate/ucsb-full-report.pdf).
+
+
+
+```{r}
+
+#create a vector of 36 responses with 22 being 
+
+data <- data.frame(id = 1:36, response = c("N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "N",
+          "Y",
+          "Y",
+          "Y",
+          "Y",
+          "Y", 
+          "Y",
+          "Y",
+          "Y",
+          "Y", 
+          "Y",
+          "Y",
+          "Y",
+          "Y", 
+          "Y",
+          "Y",
+          "Y",
+          "Y", 
+          "Y",
+          "Y",
+          "Y",
+          "Y", 
+          "Y")) %>% # did this and then realized they probably needed to be numeric
+  mutate(response = case_when(response == "Y" ~"1", 
+                              response =="N"~ "0"))
+          
+  
+
+sum_data <- data %>% 
+  group_by(response) %>% 
+  summarize(number = n())
+
+```
+
+
+
+```{r}
+#explore the data
+
+
+
+```
+
