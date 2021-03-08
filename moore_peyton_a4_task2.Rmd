@@ -60,7 +60,7 @@ Wild catch looks logistic
 Production of farmed fish resembles an exponential function
 total fish production is linear-ish 
 
-Logisitic growth equation:
+Logistic growth equation:
 
 $P(t)=\frac{K}{1+Ae^{-kt}}$, where
 
