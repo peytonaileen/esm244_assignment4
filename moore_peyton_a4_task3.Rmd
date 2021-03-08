@@ -2,13 +2,14 @@
 title: "Task 3"
 author: "Peyton Moore"
 date: "3/7/2021"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
+    theme: cosmo
 ---
 
-```{r setup}
-knitr::opts_chunk$set(echo = TRUE,
-                      warning = FALSE,
-                      message = FALSE)
+```{r setup, include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE,message = FALSE, warning = FALSE, include = FALSE)
 
 library(tidyverse)
 library(here)
@@ -66,7 +67,8 @@ data <- data.frame(id = 1:36, response = c("N",
           "Y", 
           "Y")) %>% # did this and then realized they probably needed to be numeric
   mutate(response = case_when(response == "Y" ~"1", 
-                              response =="N"~ "0"))
+                              response =="N"~ "0")) %>% 
+  mutate(response = as.numeric(response))
           
   
 
@@ -81,6 +83,60 @@ sum_data <- data %>%
 ```{r}
 #explore the data
 
+hist(data$response)
+mean(data$response)
+t.test(data$response)
+```
+### Bootstrapping 
+
+
+```{r}
+#create a function that will calculate a mean 
+mean_fun <- function(x, i) {mean(x[i])}
+
+#get a vector with just the responses
+response_vec <- data$response
+
+# create bootstrap samples
+resp_boot <- boot(response_vec, 
+                  statistic = mean_fun, 
+                  R = 10000)
+
+#resp_boot
+```
+
+
+```{r, include= TRUE}
+#resp_boot$t0 # the original sample mean is 0.61111
+#resp_boot$t
+
+
+resp_boot_df <- data.frame(bs_mean = resp_boot$t)
+
+
+p1 <- ggplot(data = data, aes(x = response))+
+  geom_histogram()
+
+#p1
+
+p2 <- ggplot(data = resp_boot_df, aes(x = bs_mean))+
+  geom_histogram(fill = "goldenrod", bins = 10, color = "goldenrod", alpha = 0.5)+
+  theme_minimal()+
+  labs(y = "Count", 
+       x = "Bootstrapped Proportion",
+       title = "Bootstrapped Proportion of Nonbinary/Genderqueer \n Students at UCSB That Experienced Exclusionary Behavior")
+
+p2
+
+```
+
+
+### Confidence Interval
+We expect that 9500 of 10000 calculated confidence intervals will contain the actual population parameter. There is only a 5% chance that the true mean of the population lies outside of 45%-77%. 
+
+```{r}
+
+boot.ci(resp_boot, conf = 0.95)
 
 
 ```
